@@ -129,7 +129,7 @@ npm run test:cov
 
 ## Architectural Decisions
 
-1. **Transaction Atomicity**: We use database transactions to ensure that currency exchanges are atomic and prevent race conditions.
+1. **Transaction Atomicity**: I use database transactions to ensure that currency exchanges are atomic and prevent race conditions.
 
 2. **Multi-Currency Design**: Each user can have multiple wallets, one per currency, allowing for scalable currency support.
 
