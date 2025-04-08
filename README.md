@@ -30,7 +30,7 @@ A NestJS-based backend for an FX Trading application that allows users to regist
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/fx-trading-app.git
+git clone https://github.com/Aradhik11/fx_trading.git
 cd fx-trading-app
 ```
 
@@ -81,7 +81,7 @@ npm run start:prod
 
 ## API Documentation
 
-After starting the application, visit `http://localhost:3000/api/docs` to access the Swagger documentation.
+After starting the application, visit `http://localhost:3000/api-docs` to access the Swagger documentation.
 
 ### Key API Endpoints
 
