@@ -15,7 +15,15 @@ export class Wallet {
   @Column()
   currency: string;
 
-  @Column('decimal', { precision: 18, scale: 8, default: 0 })
+  @Column('decimal', { 
+    precision: 18, 
+    scale: 8, 
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value)
+    }
+  })
   balance: number;
 
   @CreateDateColumn()

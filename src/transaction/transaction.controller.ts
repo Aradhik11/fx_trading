@@ -6,7 +6,7 @@ import { User } from '../auth/decorators/user.decorator';
 import { Transaction } from './entities/transaction.entity';
 
 @ApiTags('transactions')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export class TransactionController {

@@ -66,13 +66,14 @@ export class WalletService {
                 // Record transaction
                 await this.transactionService.createTransaction({
                     userId,
-                    type: TransactionType.FUNDING,
+                    type: TransactionType.DEPOSIT,
                     sourceCurrency: currency,
                     sourceAmount: amount,
                     targetCurrency: currency,
                     targetAmount: amount,
                     rate: 1,
                     status: TransactionStatus.COMPLETED,
+                    amount: amount
                 });
 
                 await queryRunner.commitTransaction();
@@ -80,19 +81,20 @@ export class WalletService {
             }
 
             // Update existing wallet
-            wallet.balance += amount;
+            wallet.balance = Number((wallet.balance + amount).toFixed(8));
             await queryRunner.manager.save(wallet);
             
             // Record transaction
             await this.transactionService.createTransaction({
                 userId,
-                type: TransactionType.FUNDING,
+                type: TransactionType.DEPOSIT,
                 sourceCurrency: currency,
                 sourceAmount: amount,
                 targetCurrency: currency,
                 targetAmount: amount,
                 rate: 1,
                 status: TransactionStatus.COMPLETED,
+                amount: amount
             });
 
             await queryRunner.commitTransaction();
@@ -167,13 +169,14 @@ export class WalletService {
             // Record transaction
             await this.transactionService.createTransaction({
                 userId,
-                type: TransactionType.CONVERSION,
+                type: TransactionType.EXCHANGE,
                 sourceCurrency,
                 sourceAmount: amount,
                 targetCurrency,
                 targetAmount: convertedAmount,
                 rate,
                 status: TransactionStatus.COMPLETED,
+                amount: amount
             });
 
             await queryRunner.commitTransaction();
@@ -194,8 +197,8 @@ export class WalletService {
     ): Promise<{ sourceWallet: Wallet; targetWallet: Wallet; rate: number }> {
         const result = await this.convertCurrency(userId, sourceCurrency, targetCurrency, amount);
         
-        // Update the transaction type to TRADE
-        await this.transactionService.updateLastTransaction(userId, TransactionType.TRADE);
+        // Update the transaction type to TRANSFER
+        await this.transactionService.updateLastTransaction(userId, TransactionType.TRANSFER);
         
         return result;
     }

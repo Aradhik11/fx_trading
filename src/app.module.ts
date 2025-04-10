@@ -33,8 +33,8 @@ import { TransactionModule } from './transaction/transaction.module';
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true, // WARNING: Only for development
-        dropSchema: true, // WARNING: This will drop all tables
-        logging: configService.get('NODE_ENV') === 'development',
+        dropSchema: true, // This will drop and recreate all tables
+        logging: true, // Enable logging to see what's happening
         ssl: configService.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
       }),
       inject: [ConfigService],
