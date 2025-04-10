@@ -6,7 +6,8 @@ export enum TransactionType {
     DEPOSIT = 'deposit',
     WITHDRAWAL = 'withdrawal',
     TRANSFER = 'transfer',
-    EXCHANGE = 'exchange'
+    EXCHANGE = 'exchange',
+    TRADE = 'trade'
 }
 
 export enum TransactionStatus {
@@ -49,10 +50,17 @@ export class Transaction {
   @Column('decimal', { precision: 18, scale: 8 })
   rate: number;
 
+  @Column({ nullable: true })
+  targetUserId: string;
+
+  @Column({ nullable: true })
+  description: string;
+
   @Column({
     type: 'enum',
     enum: TransactionStatus,
-    enumName: 'transactions_status_enum'
+    enumName: 'transactions_status_enum',
+    default: TransactionStatus.PENDING
   })
   status: TransactionStatus;
 

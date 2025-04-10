@@ -1,36 +1,28 @@
-# FX Trading App Backend
+# FX Trading Application
 
-A NestJS-based backend for an FX Trading application that allows users to register, verify their email, fund their wallet, and trade currencies including Naira (NGN).
+A currency trading application built with NestJS that allows users to manage wallets, perform currency conversions, and track transactions.
 
-## Key Features
+## Features
 
-- User authentication with email verification
-- Multi-currency wallet management
-- Real-time FX rates integration
-- Currency conversion and trading
-- Transaction history
+- User Authentication (JWT)
+- Wallet Management
+- Currency Exchange
+- Transaction History
+- Swagger API Documentation
 
-## Tech Stack
-
-- **Framework**: NestJS
-- **ORM**: TypeORM
-- **Database**: PostgreSQL
-- **Authentication**: JWT
-- **API Documentation**: Swagger
-
-## Setup Instructions
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v16+)
+- Node.js
 - PostgreSQL
-- Git
+- npm or yarn
 
 ### Installation
 
 1. Clone the repository
 ```bash
-git clone https://github.com/Aradhik11/fx_trading.git
+git clone <repository-url>
 cd fx-trading-app
 ```
 
@@ -40,106 +32,99 @@ npm install
 ```
 
 3. Create a `.env` file in the root directory with the following variables:
-```
+```env
 # Database
 DB_HOST=localhost
 DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=yourpassword
-DB_DATABASE=fx_trading
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+DB_DATABASE=fx_trading_app
 
 # JWT
 JWT_SECRET=your_jwt_secret
-JWT_EXPIRY=7d
+JWT_EXPIRY=1d
 
-# Email
+# Email (if using email verification)
 MAIL_HOST=smtp.example.com
 MAIL_PORT=587
-MAIL_USER=your_email@example.com
-MAIL_PASSWORD=your_email_password
-
-# FX API
-FX_API_URL=https://www.exchangerate-api.com/v4/latest
-FX_API_KEY=your_api_key
-
-# App
-APP_URL=http://localhost:3000
-PORT=3000
+MAIL_USER=your_email
+MAIL_PASSWORD=your_password
+MAIL_FROM=noreply@example.com
 ```
 
 4. Start the application
 ```bash
-# Development mode
 npm run start:dev
-
-# Production mode
-npm run build
-npm run start:prod
 ```
-
-5. Access the API at `http://localhost:3000`
 
 ## API Documentation
 
-After starting the application, visit `http://localhost:3000/api-docs` to access the Swagger documentation.
+The API documentation is available through Swagger UI at `http://localhost:3000/api`.
 
-### Key API Endpoints
+### Authentication
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/auth/register` | POST | Register a new user |
-| `/auth/verify` | POST | Verify email address |
-| `/auth/login` | POST | Login and get access token |
-| `/wallet` | GET | Get user wallet balances |
-| `/wallet/fund` | POST | Fund wallet |
-| `/wallet/convert` | POST | Convert between currencies |
-| `/wallet/trade` | POST | Trade currencies |
-| `/fx/rates` | GET | Get current FX rates |
-| `/transactions` | GET | Get transaction history |
+1. Register a new user:
+   - POST `/api/auth/register`
+   - Verify your email using the code sent to your email address
 
-## Architecture
+2. Login:
+   - POST `/api/auth/login`
+   - Save the returned JWT token
 
-The application follows a modular architecture with clear separation of concerns:
+3. Using the API:
+   - Click the "Authorize" button in Swagger UI
+   - Enter your token with format: `Bearer your_token_here`
+   - All authenticated endpoints will now work
 
-- **Auth Module**: Handles user authentication and verification
-- **Wallet Module**: Manages user wallets and balances
-- **FX Module**: Integrates with external FX rate APIs
-- **Transaction Module**: Records and manages transaction history
-- **Shared Module**: Contains utility services like email sending
+### Available Endpoints
 
-## Database Schema
+- **Auth**
+  - POST `/api/auth/register` - Register new user
+  - POST `/api/auth/login` - Login
+  - POST `/api/auth/verify` - Verify email
 
-![Database Schema](https://placeholder-database-schema.com)
+- **Wallets**
+  - GET `/api/wallets` - Get user wallets
+  - POST `/api/wallets/fund` - Fund wallet
+  - POST `/api/wallets/convert` - Convert currency
+  - POST `/api/wallets/trade` - Trade currency
 
-### Key Entities
+- **Transactions**
+  - GET `/api/transactions` - Get transaction history
+    - Optional query parameters:
+      - `limit` (default: 50)
+      - `offset` (default: 0)
 
-- **Users**: User accounts with email verification status
-- **Wallets**: Multi-currency wallets for each user
-- **Transactions**: Records of all financial activities
+### Transaction Types
 
-## Testing
+The system supports the following transaction types:
+- `DEPOSIT` - Adding funds to wallet
+- `WITHDRAWAL` - Removing funds from wallet
+- `TRANSFER` - Transferring between wallets
+- `EXCHANGE` - Currency exchange
 
-```bash
-# Run all tests
-npm run test
+## Development
 
-# Run test coverage
-npm run test:cov
-```
+### Database Synchronization
 
-## Architectural Decisions
+The application uses TypeORM with `synchronize: true` for development, which automatically updates the database schema to match the entities.
 
-1. **Transaction Atomicity**: I use database transactions to ensure that currency exchanges are atomic and prevent race conditions.
+### API Testing
 
-2. **Multi-Currency Design**: Each user can have multiple wallets, one per currency, allowing for scalable currency support.
+You can test the API using:
+- Swagger UI at `http://localhost:3000/api`
+- Postman or similar API testing tools
 
-3. **Rate Caching**: FX rates are cached for a configurable period to reduce API calls and improve performance.
+## Security Notes
 
-4. **Error Handling**: External API failures are handled gracefully with fallback mechanisms.
+- JWT tokens expire after 24 hours
+- Email verification is required for new accounts
+- All amounts are stored with 8 decimal precision
 
-## Scalability Considerations
+## Error Handling
 
-- **Horizontal Scaling**: The application can be deployed across multiple instances behind a load balancer.
-- **Rate Limiting**: API endpoints include rate limiting to prevent abuse.
-- **Caching**: Multiple layers of caching reduce database and external API load.
-- **Database Indices**: Strategic indexing on frequently queried fields.
+Common error responses:
+- 401 Unauthorized - Invalid or missing JWT token
+- 400 Bad Request - Invalid input data
+- 404 Not Found - Resource not found
+- 409 Conflict - Resource already exists
